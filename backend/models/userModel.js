@@ -46,18 +46,4 @@ User.init(
     }
 );
 
-// // Синхронизация модели с базой данных
-// async function syncDB() {
-//     try {
-//         await sequelize.authenticate(); // Проверка соединения с базой данных
-//         console.log('Connection has been established successfully.');
-//         await sequelize.sync({ alter: true });
-//         console.log('Database synced.');
-//     } catch (error) {
-//         console.error('Unable to connect to the database:', error);
-//     }
-// }
-
-// syncDB();
-
 export default User;

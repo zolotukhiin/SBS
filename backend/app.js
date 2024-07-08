@@ -6,6 +6,8 @@ syncDB();
 // Импортируем маршруты 
 import userRoutes from './routes/user.routes.js';
 import itemRoutes from './routes/item.routes.js';
+import offerRoutes from './routes/offer.routes.js'
+import exchangeRoutes from './routes/exchange.routes.js';
 
 // Создаем экземпляр приложения Express
 const app = express();
@@ -17,7 +19,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Подключаем маршруты
-app.use('/api', userRoutes, itemRoutes);
+app.use('/api', userRoutes, itemRoutes, offerRoutes, exchangeRoutes);
 
 // Определяем маршрут для корневого URL ('/') и возвращаем сообщение
 app.get('/', (req, res) => {
