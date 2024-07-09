@@ -54,7 +54,7 @@ Exchange.init(
             },
         },
         status: {
-            type: DataTypes.ENUM('no answer', 'exchange completed', 'exchange failed', 'offer expired'),
+            type: DataTypes.ENUM('no answer', 'completed', 'rejected', 'offer expired'),
             allowNull: false,
             defaultValue: 'no answer',
         },
