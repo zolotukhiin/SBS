@@ -8,6 +8,8 @@ import userRoutes from './routes/user.routes.js';
 import itemRoutes from './routes/item.routes.js';
 import offerRoutes from './routes/offer.routes.js'
 import exchangeRoutes from './routes/exchange.routes.js';
+import cors from 'cors';
+
 
 // Создаем экземпляр приложения Express
 const app = express();
@@ -15,6 +17,8 @@ const app = express();
 // Устанавливаем порт, на котором будет работать сервер. Используем переменную окружения PORT или значение по умолчанию 3000
 const PORT = process.env.PORT || 3000;
 
+// CORS
+app.use(cors());
 // Добавляем middleware для автоматического преобразования JSON-запросов в объекты JavaScript
 app.use(express.json());
 

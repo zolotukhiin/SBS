@@ -24,7 +24,8 @@ export const createItem = async (req, res) => {
 
         // Возврат успешного ответа с созданным предметом
         return res.status(201).json({
-            name: newItem.id,
+            id: newItem.id,
+            name: newItem.name,
             description: newItem.description,
             category: newItem.category,
             photos: newItem.photos,
