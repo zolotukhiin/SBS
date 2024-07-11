@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { Link, Button } from '@nextui-org/react';
 import { Input } from '../../components/input';
-import { useLoginMutation } from '../../app/services/userApi';
+import { useRegistrationMutation } from '../../app/services/userApi';
 import { useNavigate } from 'react-router-dom';
 import { hasErrorField } from '../../utils/has-error-field';
 import { ErrorMessage } from '../../components/error-message';
@@ -19,9 +19,9 @@ type Props = {
   setSelected: (value: string) => void;
 };
 
-export const Register: React.FC<Props> = ({
+export const Register = ({
   setSelected
-}) => {
+}: Props) => {
   const {
     handleSubmit,
     control,
@@ -38,17 +38,16 @@ export const Register: React.FC<Props> = ({
     }
   });
 
-  const [reqister, { isLoading }] = useLoginMutation();
-  const navigate = useNavigate();
+  const [reqister] = useRegistrationMutation();
   const [error, setError] = useState('');
 
   const onSubmit = async (data: Register) => {
     try {
       await reqister(data).unwrap();
       setSelected('login');
-    } catch (error) {
-      if (hasErrorField(error)) {
-        setError(error.data.error);
+    } catch (err) {
+      if (hasErrorField(err)) {
+        setError(err.data.error)
       };
     }
   };
@@ -57,14 +56,14 @@ export const Register: React.FC<Props> = ({
     <form className='flex flex-col gap-4' onSubmit={handleSubmit(onSubmit)}>
       <Input
         control={control}
-        name='firstname'
+        name='firstName'
         label='Имя'
         type='text'
         required='Обязательное поле'
       />
       <Input
         control={control}
-        name='lastname'
+        name='lastName'
         label='Фамилия'
         type='text'
         required='Обязательное поле'
@@ -102,7 +101,7 @@ export const Register: React.FC<Props> = ({
         </Link>
       </p>
       <div className='flex gap-2 justify-end'>
-        <Button fullWidth color="primary" type='submit' isLoading={isLoading}>
+        <Button fullWidth color="primary" type='submit'>
           Зарегистрироваться
         </Button>
       </div>

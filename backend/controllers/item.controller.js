@@ -176,3 +176,27 @@ export const otherUserItems = async (req, res) => {
         return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
     }
 };
+
+// Функция для предметов 
+export const getItems = async (req, res) => {
+
+    try {
+        // Поиск всех предметов, созданных текущим пользователем
+        const items = await Item.findAll({
+            attributes: ['id', 'name', 'description', 'category', 'photos', 'isActive', 'createdAt', 'authorId'],
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'firstName', 'lastName']
+                }
+            ]
+        });
+
+        // Возврат найденных предметов в ответе
+        return res.status(200).json(items);
+
+    } catch (error) {
+        console.error('Ошибка при получении предметов:', error);
+        return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    }
+};

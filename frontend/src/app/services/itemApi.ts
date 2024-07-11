@@ -91,6 +91,7 @@ export const {
   useMyItemsQuery,
   useOtherUserItemsQuery,
   useGetItemByIdQuery,
+  useLazyGetAllItemsQuery,
   useGetAllItemsQuery,
 } = itemApi;
 

@@ -35,6 +35,9 @@ export const slice = createSlice({
                 state.isAuthenticated = true;
                 state.current = action.payload;
             })
+            .addMatcher(userApi.endpoints.getUserById.matchFulfilled, (state, action) => {
+                state.user = action.payload;
+            })
     }
 });
 
@@ -47,3 +50,12 @@ export const selectIsAuthenticated = (state: RootState) =>
 
 export const selectCurrentUser = (state: RootState) =>
     state.user.current
+
+// default
+// export const selectUser = (state: RootState) =>
+//     state.user.user
+
+export const selectUser = (userId: number) => (state: RootState): User | undefined => {
+    console.log('inselect', state.user)
+    return state.user.users?.find(user => user.id === userId);
+};

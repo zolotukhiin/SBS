@@ -4,7 +4,6 @@ export type Item = {
   description: string,
   category: string,
   photos: string[],
-  password: string,
   createdAt: Date,
   isActive: boolean,
   authorId: number

@@ -1,4 +1,3 @@
-import React from 'react'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '../../features/user/userSlice'
 import { Card, CardBody, CardHeader, Image } from '@nextui-org/react';
