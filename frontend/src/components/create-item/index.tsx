@@ -36,13 +36,12 @@ export const CreateItem = () => {
     }
 
     try {
-      const photosArray = data.photos.split(',').map(photo => photo.trim());
 
       await createItem({
         name: data.name,
         description: data.description,
         category: data.category,
-        photos: photosArray,
+        photos: data.photos,
         authorId: currentUser.id,
       }).unwrap();
 

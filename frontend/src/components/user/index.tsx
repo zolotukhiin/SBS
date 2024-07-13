@@ -1,24 +1,30 @@
-import { User as NextUser } from '@nextui-org/react'
+// компонент отображения пользователя в карточках предметов
+import { User as NextUser } from '@nextui-org/react';
+import { BASE_URL } from '../../constants';
 
 type Props = {
   username: string,
+  firstName: string,
+  lastName: string,
   className?: string,
-  description?: string
+  avatarSrc?: string
 }
 
 export const CustomUser: React.FC<Props> = ({
   username = '',
+  firstName = '',
+  lastName = '',
   className = '',
-  description = ''
+  avatarSrc = ''
 }) => {
   return (
     <NextUser
-      name={username}
+      name={`${firstName} ${lastName}`}
       className={className}
+      description={username}
       avatarProps={{
-        src: "https://avatars.githubusercontent.com/u/30373425?v=4"
+        src: `${BASE_URL}${avatarSrc}`,
       }}
-      description={description}
     />
-  )
-}
+  );
+};

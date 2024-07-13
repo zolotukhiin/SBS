@@ -42,10 +42,12 @@ export const Register = ({
   const [error, setError] = useState('');
 
   const onSubmit = async (data: Register) => {
+    console.log(data)
     try {
       await reqister(data).unwrap();
       setSelected('login');
     } catch (err) {
+      console.log('err', err)
       if (hasErrorField(err)) {
         setError(err.data.error)
       };
@@ -107,4 +109,4 @@ export const Register = ({
       </div>
     </form>
   )
-}
+};

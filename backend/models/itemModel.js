@@ -24,9 +24,8 @@ Item.init(
             allowNull: false,
         },
         photos: {
-            type: DataTypes.ARRAY(DataTypes.STRING),
+            type: DataTypes.STRING,
             allowNull: true,
-            defaultValue: [],
         },
         createdAt: {
             type: DataTypes.DATE,

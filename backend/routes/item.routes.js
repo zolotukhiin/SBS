@@ -1,5 +1,5 @@
 import express from 'express';
-import { createItem, updateItem, deleteItem, myItems, otherUserItems, getItems } from '../controllers/item.controller.js';
+import { createItem, updateItem, deleteItem, myItems, otherUserItems, getItems, getItemById } from '../controllers/item.controller.js';
 import { authenticateToken } from '../middlewares/authenticateToken.js';
 import { validateItemCreate, validateItemUpdate } from '../validators/itemValidator.js';
 
@@ -22,5 +22,8 @@ router.get('/items/users/:id', authenticateToken, otherUserItems)
 
 // all items
 router.get('/items', authenticateToken, getItems)
+
+// get item by id 
+router.get('/items/:id', authenticateToken, getItemById)
 
 export default router;

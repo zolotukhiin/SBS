@@ -63,12 +63,23 @@ export const exchangeApi = api.injectEndpoints({
     // Create decision for exchange
     createSolutionToExchange: builder.mutation<
       Exchange,
-      { id: number, decision: { status: 'no answer' | 'completed' | 'rejected' | 'offer expired' } }
+      { id: number, decision: string }
     >({
       query: ({ id, decision }) => ({
         url: `/exchange-decide/${id}`,
         method: 'POST',
-        body: decision,
+        body: { decision },
+      })
+    }),
+
+    // Get all exchanges
+    getExchanges: builder.query<
+      Exchange[],
+      void
+    >({
+      query: () => ({
+        url: '/exchanges',
+        method: 'GET',
       })
     }),
   })
@@ -81,6 +92,7 @@ export const {
   useGetMyCreatedExchangesQuery,
   useGetExchangesForMeQuery,
   useCreateSolutionToExchangeMutation,
+  useGetExchangesQuery,
 } = exchangeApi;
 
 export const {
@@ -91,5 +103,6 @@ export const {
     getMyCreatedExchanges,
     getExchangesForMe,
     createSolutionToExchange,
+    getExchanges
   }
 } = exchangeApi;

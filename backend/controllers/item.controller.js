@@ -1,5 +1,11 @@
 import Item from '../models/itemModel.js';
 import User from '../models/userModel.js';
+import { toPng } from "jdenticon";
+import path from 'path';
+import fs from 'fs';
+import url from 'url'
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Функция создания предмета
 export const createItem = async (req, res) => {
@@ -7,6 +13,11 @@ export const createItem = async (req, res) => {
     const authorId = req.user.user_id; // Получение ID текущего пользователя из токена
 
     try {
+        const png = toPng(name, 200);
+        const photosName = `${name}_${Date.now()}.png`;
+        const photosPath = path.join(__dirname, '/../uploads', photosName);
+        fs.writeFileSync(photosPath, png);
+
         // Создание нового предмета
         const newItem = await Item.create({
             name,
@@ -15,7 +26,8 @@ export const createItem = async (req, res) => {
             photos,
             isActive,
             authorId: authorId,
-            createdAt: new Date()
+            createdAt: new Date(),
+            photos: `/uploads/${photosName}`,
         });
 
         const author = await User.findByPk(authorId, {
@@ -34,6 +46,7 @@ export const createItem = async (req, res) => {
                 firstName: author.firstName,
                 lastName: author.lastName
             },
+            photos: newItem.photos,
             createdAt: newItem.createdAt
         });
     } catch (error) {
@@ -46,6 +59,11 @@ export const createItem = async (req, res) => {
 export const updateItem = async (req, res) => {
     const itemId = req.params.id; // Получение ID предмета из URL
     const { name, description, category, photos, isActive } = req.body;
+
+    let filepath;
+    if (req.file && req.file.filepath) {
+        filepath = req.file.path
+    }
 
     try {
         // Проверка, существует ли предмет с указанным itemId
@@ -63,7 +81,7 @@ export const updateItem = async (req, res) => {
         if (name) item.name = name;
         if (description) item.description = description;
         if (category) item.category = category;
-        if (photos) item.photos = photos;
+        if (photos) item.photos = filepath;
         if (isActive !== undefined) item.isActive = isActive;
 
         await item.save(); // Сохранение обновленных данных в базе данных
@@ -188,8 +206,9 @@ export const getItems = async (req, res) => {
                 {
                     model: User,
                     attributes: ['id', 'firstName', 'lastName']
-                }
-            ]
+                },
+            ],
+            order: [['createdAt', 'DESC']]
         });
 
         // Возврат найденных предметов в ответе
@@ -197,6 +216,35 @@ export const getItems = async (req, res) => {
 
     } catch (error) {
         console.error('Ошибка при получении предметов:', error);
+        return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    }
+};
+
+// Функция для предметов 
+export const getItemById = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        // Поиск всех предметов, созданных текущим пользователем
+        const items = await Item.findOne({
+            attributes: ['id', 'name', 'description', 'category', 'photos', 'isActive', 'createdAt', 'authorId'],
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'firstName', 'lastName']
+                },
+            ],
+            where: {
+                id: id
+            },
+            order: [['createdAt', 'DESC']]
+        });
+
+        // Возврат найденных предметов в ответе
+        return res.status(200).json(items);
+
+    } catch (error) {
+        console.error('Ошибка при получении предмета по id:', error);
         return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
     }
 };

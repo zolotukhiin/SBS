@@ -5,5 +5,6 @@ export type User = {
   username: string,
   number: string,
   password: string,
-  createdAt: Date
+  createdAt: Date,
+  avatar: string
 };

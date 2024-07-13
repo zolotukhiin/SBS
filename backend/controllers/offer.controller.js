@@ -64,7 +64,8 @@ export const getOffers = async (req, res) => {
                     model: Item,
                     attributes: ['name']
                 }
-            ]
+            ],
+            order: [['expirationDate', 'ASC']]
         });
 
         return res.status(200).json(offers);

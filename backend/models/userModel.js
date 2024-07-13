@@ -33,6 +33,9 @@ User.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        avatar: {
+            type: DataTypes.STRING,
+        },
         createdAt: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,

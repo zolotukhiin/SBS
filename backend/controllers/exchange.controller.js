@@ -189,6 +189,7 @@ export const createSolutionToExchange = async (req, res) => {
 
             await requesterItem.save();
             await offerItem.save();
+            await exchange.save();
 
             return res.status(201).json({
                 offer: offer,
@@ -210,4 +211,34 @@ export const createSolutionToExchange = async (req, res) => {
         return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
     };
 
+};
+
+// get exchanges by id
+export const getExchangesById = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const exchanges = await Exchange.findOne({
+            where: {
+                id: id
+            },
+        });
+
+        res.status(200).json(exchanges);
+    } catch (error) {
+        console.error('Ошибка при получении обмена:', error);
+        return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    };
+};
+
+// get all exchanges
+export const getExchanges= async (req, res) => {
+    try {
+        const exchanges = await Exchange.findAll();
+
+        res.status(200).json(exchanges);
+    } catch (error) {
+        console.error('Ошибка при получении обменов:', error);
+        return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    };
 };

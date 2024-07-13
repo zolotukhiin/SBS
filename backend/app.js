@@ -9,6 +9,7 @@ import itemRoutes from './routes/item.routes.js';
 import offerRoutes from './routes/offer.routes.js'
 import exchangeRoutes from './routes/exchange.routes.js';
 import cors from 'cors';
+import fs from 'fs';
 
 
 // Создаем экземпляр приложения Express
@@ -22,8 +23,15 @@ app.use(cors());
 // Добавляем middleware для автоматического преобразования JSON-запросов в объекты JavaScript
 app.use(express.json());
 
+// Раздача статики из папки uploads
+app.use('/uploads', express.static('uploads'));
+
 // Подключаем маршруты
 app.use('/api', userRoutes, itemRoutes, offerRoutes, exchangeRoutes);
+
+if (!fs.existsSync('uploads')) {
+  fs.mkdirSync('uploads')
+}
 
 // Определяем маршрут для корневого URL ('/') и возвращаем сообщение
 app.get('/', (req, res) => {

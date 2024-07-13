@@ -4,7 +4,7 @@ import { Card, CardBody, CardHeader, Image } from '@nextui-org/react';
 import { Link } from 'react-router-dom';
 import { BsFillTelephoneFill } from "react-icons/bs";
 
-import supportImage from '../../static-only-dev/support.jpg';
+import { BASE_URL } from '../../constants';
 
 
 export const Profile = () => {
@@ -16,7 +16,7 @@ export const Profile = () => {
     return null
   };
 
-  const { firstName, lastName, username, number, id } = currentUser;
+  const { firstName, lastName, username, number, id, avatar} = currentUser;
 
   return (
     <Card className='py-4 w-[302px]'>
@@ -24,7 +24,7 @@ export const Profile = () => {
         <Image 
           alt='Card profile'
           className='object-cover rounded-xl'
-          src={supportImage}
+          src={`${BASE_URL}${avatar}`}
           width={370}
         />
       </CardHeader>

@@ -2,6 +2,16 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
 import { Op } from 'sequelize';
+import { toPng } from "jdenticon";
+import path from 'path';
+import fs from 'fs';
+
+//
+import url from 'url'
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+//
 
 const jwtSecret = 'zolotukhin_esoft';
 const saltRounds = 10; // Количество раундов для генерации соли
@@ -17,6 +27,12 @@ export const createUser = async (req, res) => {
     try {
         // Хэшируем пароль
         const hashedPassword = await bcrypt.hash(password, saltRounds);
+        
+        //
+        const png = toPng(username, 200);
+        const avatarName = `${username}_${Date.now()}.png`;
+        const avatarPath = path.join(__dirname, '/../uploads', avatarName);
+        fs.writeFileSync(avatarPath, png);
 
         // Создание пользователя с использованием Sequelize
         const newUser = await User.create({
@@ -24,7 +40,8 @@ export const createUser = async (req, res) => {
             lastName,
             username,
             number,
-            password: hashedPassword
+            password: hashedPassword,
+            avatar: `/uploads/${avatarName}`,
         });
         
         // Создание токена
@@ -44,7 +61,8 @@ export const createUser = async (req, res) => {
                 firstName: newUser.firstName,
                 lastName: newUser.lastName,
                 username: newUser.username,
-                number: newUser.number
+                number: newUser.number,
+                avatar: `/uploads/${avatarName}`,
             },
             token
         });
@@ -60,7 +78,7 @@ export const getUsers = async (req, res) => {
     try {
         // Запрос на выборку всех пользователей
         const users = await User.findAll({
-            attributes: ['id', 'firstName', 'lastName', 'username', 'number']
+            attributes: ['id', 'firstName', 'lastName', 'username', 'number', 'avatar']
         });
 
         res.status(200).json(users);
@@ -79,7 +97,7 @@ export const getUserById = async (req, res) => {
 
         // Запрос на выборку пользователя по ID
         const user = await User.findByPk(id, {
-            attributes: ['id', 'firstName', 'lastName', 'username', 'number']
+            attributes: ['id', 'firstName', 'lastName', 'username', 'number', 'avatar']
         });
 
         if (user) {
@@ -98,10 +116,15 @@ export const getUserById = async (req, res) => {
 // Обновление пользователя
 export const updateUser = async (req, res) => {
     const { id } = req.params;
-    const { firstName, lastName, username, number, password } = req.body;
+    const { firstName, lastName, username, number, password, avatar } = req.body;
 
-    if (!firstName && !lastName && !username && !number && !password) {
+    if (!firstName && !lastName && !username && !number && !password && avatar) {
         return res.status(400).json({ error: 'Хотя бы одно поле должно быть указано для обновления' });
+    }
+
+    let filepath;
+    if (req.file && req.file.filepath) {
+        filepath = req.file.path
     }
 
     try {
@@ -123,6 +146,7 @@ export const updateUser = async (req, res) => {
         if (username) user.username = username;
         if (number) user.number = number;
         if (password) user.password = await bcrypt.hash(password, saltRounds); // Хэшировать новый пароль
+        if (avatar) user.avatar = filepath;
 
         // Сохранить изменения
         await user.save();
@@ -134,7 +158,8 @@ export const updateUser = async (req, res) => {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 username: user.username,
-                number: user.number
+                number: user.number,
+                avatar: user.avatar
             }
         });
     } catch (err) {
@@ -231,10 +256,12 @@ export const getUserInfo = async (req, res) => {
             return res.status(404).json({ message: 'Пользователь не найден' });
         }
         res.status(200).json({
+            id: user.id,
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
-            number: user.number
+            number: user.number,
+            avatar: user.avatar
         });
 
     } catch (error) {

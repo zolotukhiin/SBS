@@ -78,7 +78,11 @@ export const itemApi = api.injectEndpoints({
     >({
       query: () => ({
         url: '/items',
-        method: 'GET'
+        method: 'GET',
+        params: {
+          sortBy: 'createdAt',
+          order: 'desc'
+        }
       })
     }),
   })

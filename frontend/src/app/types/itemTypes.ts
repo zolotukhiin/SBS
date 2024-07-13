@@ -3,7 +3,7 @@ export type Item = {
   name: string,
   description: string,
   category: string,
-  photos: string[],
+  photos: string,
   createdAt: Date,
   isActive: boolean,
   authorId: number

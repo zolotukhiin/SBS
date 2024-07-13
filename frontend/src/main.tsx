@@ -16,6 +16,8 @@ import { Offers } from "./pages/offers"
 import { Exchanges } from "./pages/exchanges"
 import { UserProfile } from "./pages/user-profile"
 import { AuthGuard } from "./features/user/authGuard"
+import { UserProfileId } from "./components/user-profile-id"
+import { MainPage } from "./pages/main"
 
 const container = document.getElementById("root")
 
@@ -31,7 +33,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Items />
+        element: <MainPage />
       },
       {
         path: '/items',
@@ -48,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: '/user-profile',
         element: <UserProfile />
+      },
+      {
+        path: '/users/:id',
+        element: <UserProfileId />
       },
     ]
   },
